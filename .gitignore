@@ -1,1 +1,4 @@
 .vscode
+
+# pyspark checkpoints
+checkpoint_TwitterApp
