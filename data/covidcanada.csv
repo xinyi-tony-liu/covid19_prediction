@@ -1,3 +1,4 @@
+pruid,prname,prnameFR,date,numconf,numprob,numdeaths,numtotal,numtested,numrecover,percentrecover,ratetested,numtoday,percentoday,ratetotal,ratedeaths,numdeathstoday,percentdeath,numtestedtoday,numrecoveredtoday,percentactive,numactive,rateactive,numtotal_last14,ratetotal_last14,numdeaths_last14,ratedeaths_last14,avgtotal_last7,avgincidence_last7,avgdeaths_last7,avgratedeaths_last7
 1,Canada,Canada,26-03-2020,4018,25,39,4043,161603,230,5.69,4299,634,18.60,10.76,0.10,4,0.96,13814,230,93.35,3774,10.04,3902,10.38,37,0.10,453,1.20,4,0.01
 1,Canada,Canada,27-03-2020,4675,14,53,4689,170644,256,5.46,4540,646,15.98,12.47,0.14,14,1.13,9041,26,93.41,4380,11.65,4510,12.00,51,0.14,526,1.40,6,0.02
 1,Canada,Canada,28-03-2020,5386,39,59,5425,187448,502,9.25,4987,736,15.70,14.43,0.16,6,1.09,16804,246,89.66,4864,12.94,5226,13.90,57,0.15,579,1.54,6,0.02
