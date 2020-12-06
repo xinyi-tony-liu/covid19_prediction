@@ -16,8 +16,8 @@ my_auth = requests_oauthlib.OAuth1(CONSUMER_KEY, CONSUMER_SECRET,ACCESS_TOKEN, A
 
 
 def get_tweets():
-    url = 'https://stream.twitter.com/1.1/statuses/filter.json'	
-    query_data = [('language', 'en'), ('locations', '-130,-20,100,50'),('track','iphone')]
+    url = 'https://stream.twitter.com/1.1/statuses/filter.json'
+    query_data = [('language', 'en'), ('track','covid,coronavirus')]
     query_url = url + '?' + '&'.join([str(t[0]) + '=' + str(t[1]) for t in query_data])
     response = requests.get(query_url, auth=my_auth, stream=True)
     print(query_url, response)
@@ -33,26 +33,11 @@ def send_tweets_to_spark(http_resp, tcp_connection):
                 tweet_text = full_tweet['text']
                 print("Tweet Text: " + tweet_text)
                 print ("------------------------------------------")
-                tweet_screen_name = "SN:"+full_tweet['user']['screen_name']
-                print("SCREEN NAME IS : " + tweet_screen_name)
-                print ("------------------------------------------")
-                source = full_tweet['source']
-                soup = BeautifulSoup(source)
-                for anchor in soup.find_all('a'):         
-                   print("Tweet Source: " + anchor.text)        
-                tweet_source = anchor.text
-                source_device = tweet_source.replace(" ", "")
-                device = "TS"+source_device.replace("Twitter", "") 
-                print("SOURCE IS : " + device)
-                print ("------------------------------------------")
-                tweet_country_code = "CC"+full_tweet['place']['country_code']
-                print("COUNTRY CODE IS : " + tweet_country_code)
-                print ("------------------------------------------")
-                tcp_connection.send(tweet_text +' '+ tweet_country_code + ' '+ tweet_screen_name +' '+ device +'\n')
-        
+                tcp_connection.send(f'{tweet_text}\n'.encode('utf-8'))
+
             except:
                 continue
-   
+
 
 TCP_IP = 'localhost'
 TCP_PORT = 9001
