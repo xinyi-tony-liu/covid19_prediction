@@ -30,10 +30,10 @@ def send_tweets_to_spark(http_resp, tcp_connection):
     for line in http_resp.iter_lines():
             try:
                 full_tweet = json.loads(line)
-                tweet_text = full_tweet['text']
-                print("Tweet Text: " + tweet_text)
+                print("Tweet Text: " + full_tweet['text'])
                 print ("------------------------------------------")
-                tcp_connection.send(f'{tweet_text}\n'.encode('utf-8'))
+                tweet_text = full_tweet['text'] + '\n'
+                tcp_connection.send(tweet_text.encode('utf-8'))
 
             except:
                 continue
