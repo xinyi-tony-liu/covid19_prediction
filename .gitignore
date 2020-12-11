@@ -2,3 +2,6 @@
 
 # pyspark checkpoints
 checkpoint_TwitterApp
+
+__pycache__/
+*.swp
