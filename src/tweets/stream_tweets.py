@@ -20,45 +20,42 @@ CONSUMER_KEY = '3nwyJEIXKf2ht0OX2Z2JRMvDY'
 CONSUMER_SECRET = 'S74LuAe5EOGb9qJfOEw6bKtAGH9zqjJORsyJNgZUHIZu7h0zdU'
 my_auth = requests_oauthlib.OAuth1(CONSUMER_KEY, CONSUMER_SECRET,ACCESS_TOKEN, ACCESS_SECRET)
 
-nextParam = ''
-def get_tweets(query_date = date.today()):
-    toDate = query_date + timedelta(days = 1)
+def get_tweets(query_date = date.today(), countryCode = 'ca'):
+    toDate = query_date + timedelta(days = 14)
     query_url = 'https://api.twitter.com/1.1/tweets/search/fullarchive/dev.json'
-    query_data = None
-    global nextParam
-    if nextParam == '':
-        query_data = {
-            'query': '(covid OR coronavirus) place_country:CA',
-            'fromDate': query_date.strftime("%Y%m%d0000"),
-            'toDate': toDate.strftime("%Y%m%d0000")
-        }
-    else:
-        query_data = {
-            'query': 'covid',
-            'next': nextParam
-        }
+    query_data = {
+        'query': '(covid OR coronavirus) place_country:{}'.format(countryCode),
+        'fromDate': query_date.strftime("%Y%m%d0000"),
+        'toDate': toDate.strftime("%Y%m%d0000")
+    }
     response = requests.post(
         query_url,
         auth = my_auth,
         json = query_data
     )
-    resJSON = response.json()
-    nextParam = resJSON['next']
-    print(query_url, response)
-    return resJSON['results']
+    try:
+        resJSON = response.json()
+        print(query_url, response)
+        return resJSON['results']
+    except:
+        print(response)
+        print(response.text)
+
 
 def send_tweets_to_spark(tcp_connection):
-    for _ in range(100):
-        tweets = get_tweets(targetDate)
+    for countryCode in ['AU', 'CA', 'CY', 'IS', 'NZ', 'US']:
+        tweets = get_tweets(targetDate, countryCode)
         for tweet in tweets:
             try:
                 tweet_text = tweet['text'] + '\n'
                 print("Tweet Text: " + tweet_text)
                 print ("------------------------------------------")
-                tcp_connection.send(tweet_text.encode('utf-8'))
+                tcp_connection.send(
+                    '{} {}'.format(countryCode, tweet_text).encode('utf-8')
+                )
             except:
                 continue
-        sleep(1) # so that we don't exceed the rate limit
+        sleep(2) # so that we don't exceed the rate limit
 
 
 TCP_IP = 'localhost'
