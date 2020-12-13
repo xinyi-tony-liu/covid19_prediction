@@ -8,6 +8,10 @@ from time import sleep
 from bs4 import BeautifulSoup
 from datetime import date, timedelta
 
+year = int(sys.argv[1])
+month = int(sys.argv[2])
+day = int(sys.argv[3])
+targetDate = date(year, month, day)
 
 # Include your Twitter account details
 ACCESS_TOKEN = '1733598223-PqbqmO8dDbLjmf76rvsUYo1M5DiPzekROOCyYSV'
@@ -45,9 +49,7 @@ def get_tweets(query_date = date.today()):
 
 def send_tweets_to_spark(tcp_connection):
     for _ in range(100):
-        tweets = get_tweets(
-            date(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
-        )
+        tweets = get_tweets(targetDate)
         for tweet in tweets:
             try:
                 tweet_text = tweet['text'] + '\n'
@@ -56,7 +58,7 @@ def send_tweets_to_spark(tcp_connection):
                 tcp_connection.send(tweet_text.encode('utf-8'))
             except:
                 continue
-        sleep(1)
+        sleep(1) # so that we don't exceed the rate limit
 
 
 TCP_IP = 'localhost'
