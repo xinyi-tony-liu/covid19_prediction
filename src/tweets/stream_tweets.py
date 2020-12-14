@@ -14,10 +14,10 @@ day = int(sys.argv[3])
 targetDate = date(year, month, day)
 
 # Include your Twitter account details
-ACCESS_TOKEN = '1733598223-PqbqmO8dDbLjmf76rvsUYo1M5DiPzekROOCyYSV'
-ACCESS_SECRET = 'sYlA5X5ScEKlRtPyMjRlFKft2mrKsG5SsKYM3agqzR9UK'
-CONSUMER_KEY = '3nwyJEIXKf2ht0OX2Z2JRMvDY'
-CONSUMER_SECRET = 'S74LuAe5EOGb9qJfOEw6bKtAGH9zqjJORsyJNgZUHIZu7h0zdU'
+ACCESS_TOKEN = '1338378148086505472-J3bioJBqkg3MsL1KXCqEwWjXODvqsR'
+ACCESS_SECRET = '7RzXAusydHD1VvkGDJsIVBJBdJtDAY8nmengbbDnvlnI1'
+CONSUMER_KEY = 'gu0BsNG3wvWqw7AL4z2W16x2G'
+CONSUMER_SECRET = '3OvW9AIcbMIclS35DXNK1hLzPaWWKBMT3glcwk9ZeIzANyA6Jn'
 my_auth = requests_oauthlib.OAuth1(CONSUMER_KEY, CONSUMER_SECRET,ACCESS_TOKEN, ACCESS_SECRET)
 
 def get_tweets(query_date = date.today(), countryCode = 'ca'):
@@ -47,7 +47,7 @@ def send_tweets_to_spark(tcp_connection):
         tweets = get_tweets(targetDate, countryCode)
         for tweet in tweets:
             try:
-                tweet_text = tweet['text'] + '\n'
+                tweet_text = tweet['text'].replace("\n", " ") + '\n'
                 print("Tweet Text: " + tweet_text)
                 print ("------------------------------------------")
                 tcp_connection.send(
@@ -56,6 +56,7 @@ def send_tweets_to_spark(tcp_connection):
             except:
                 continue
         sleep(2) # so that we don't exceed the rate limit
+    tcp_connection.close()
 
 
 TCP_IP = 'localhost'
